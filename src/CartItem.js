@@ -14,6 +14,37 @@ class CartItem extends React.Component {
     } 
 
     increaseQuantity = ()=> {
+
+        // method 1
+        // this.setState({
+        //     qty: this.state.qty + 1
+        // });
+
+        // method 2 - when we require prev state use this
+        this.setState((prevState) => {
+            return {
+                qty: prevState.qty + 1
+            }
+        });
+
+        console.log(this) ;
+    }
+
+    decreaseQuantity = ()=> {
+
+        const{ qty } = this.state ;
+
+        if(qty == 0){
+            return ;
+        }
+        
+        // method 2 - when we require prev state use this
+        this.setState((prevState) => {
+            return {
+                qty: prevState.qty - 1
+            }
+        });
+
         console.log(this) ;
     }
 
@@ -44,6 +75,7 @@ class CartItem extends React.Component {
                             alt="decrease" 
                             className="action-icons" 
                             src="https://as2.ftcdn.net/jpg/02/78/84/57/500_F_278845758_9xl3srVgd8p4jquxgxugGaHV1e5EOlLO.jpg"
+                            onClick={this.decreaseQuantity}
                         />
                         <img 
                             alt="delete" 
