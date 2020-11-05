@@ -1,59 +1,64 @@
 import React from 'react' ;
 
-class CartItem extends React.Component {
+const CartItem = (props)=> {
 
-    render(){
-        const {price, title, qty } = this.props.product;
-        const {product , onDecreaseQuantity , onIncreaseQuantity , onDeleteProduct} = this.props ;
+    const {price, title, qty } = props.product;
+    const {product , onDecreaseQuantity , onIncreaseQuantity , onDeleteProduct} = props ;
 
-        return(
-            <div className="cart-item">
+    return(
+        <div style={styles.CartItem} className="cart-item">
 
-                <div className="left-block">
-                    <img style={styles.image} />
-                </div>
+            <div className="left-block">
+                <img style={styles.image} />
+            </div>
 
-                <div className="right-block">
+            <div className="right-block">
 
-                    <div style={{fontSize: 25}} >{title}</div>
-                    <div style={{color: '#777'}} >Rs {price}</div>
-                    <div style={{color: '#777'}} >Qty: {qty}</div>
+                <div style={{fontSize: 25}} >{title}</div>
+                <div style={{color: '#777'}} >Rs {price}</div>
+                <div style={{color: '#777'}} >Qty: {qty}</div>
 
-                    <div className="cart-item-actions">
-                        {/* buttons */}
-                        <img 
-                            alt="increase" 
-                            className="action-icons" 
-                            src="https://as2.ftcdn.net/jpg/01/07/62/07/500_F_107620769_UwNVSoXnKS4VNcOKoZjPohlEPn83oE38.jpg" 
-                            onClick={()=> onIncreaseQuantity(product)}
-                        />
-                        <img 
-                            alt="decrease" 
-                            className="action-icons" 
-                            src="https://as2.ftcdn.net/jpg/02/78/84/57/500_F_278845758_9xl3srVgd8p4jquxgxugGaHV1e5EOlLO.jpg"
-                            onClick={()=> onDecreaseQuantity(product)}
-                        />
-                        <img 
-                            alt="delete" 
-                            className="action-icons" 
-                            src="https://as2.ftcdn.net/jpg/01/90/89/15/500_F_190891550_N7uKp2aHE3mOc20dmtDytj7atgvbhdOu.jpg"
-                            onClick={()=> onDeleteProduct(product.id)} 
-                        />
-                    </div>
-
+                <div className="cart-item-actions">
+                    {/* buttons */}
+                    <img 
+                        alt="increase" 
+                        className="action-icons" 
+                        src="https://img.icons8.com/ultraviolet/64/000000/plus.png"
+                        onClick={()=> onIncreaseQuantity(product)}
+                    />
+                    <img 
+                        alt="decrease" 
+                        className="action-icons" 
+                        src="https://img.icons8.com/ultraviolet/40/000000/minus.png"
+                        onClick={()=> onDecreaseQuantity(product)}
+                    />
+                    <img 
+                        alt="delete" 
+                        className="action-icons" 
+                        src="https://img.icons8.com/cute-clipart/64/000000/delete-forever.png"
+                        onClick={()=> onDeleteProduct(product.id)} 
+                    />
                 </div>
 
             </div>
-        );
-    }
+
+        </div>
+    );
 }
+
 
 const styles = {
     image: {
-        height: 110 ,
-        width: 110,
+        height: 140 ,
+        width: 140,
         borderRadius: 4,
         backgroundColor: '#ccc'
+    },
+
+    CartItem: {
+        marginLeft: 50 ,
+        marginTop:40,
+        marginBottom:0
     }
 }
 
