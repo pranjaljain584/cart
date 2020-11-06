@@ -1,7 +1,8 @@
-import React from 'react' ;
+import React, { Profiler } from 'react' ;
 import Cart from './Cart' ;
 import Navbar from './Navbar' ;
 import firebase from 'firebase' ;
+import { findRenderedComponentWithType } from 'react-dom/test-utils';
 
 class App extends React.Component {
 
@@ -11,6 +12,8 @@ class App extends React.Component {
         products: [],
         loading:true
     }
+
+    this.db = firebase.firestore() ;
 
     // this.increaseQuantity = this.increaseQuantity.bind(this) ;
     // or use arrow fns
@@ -42,8 +45,7 @@ class App extends React.Component {
 
     //   })
 
-    firebase
-      .firestore()
+    this.db
       .collection('products')
       .onSnapshot((snapshot) => {
         console.log(snapshot) ;
@@ -70,31 +72,62 @@ class App extends React.Component {
   handleIncreaseQuantity = (product) => {
       const {products} = this.state ;
       const index = products.indexOf(product) ;
+      // products[index].qty += 1 ;
 
-      products[index].qty += 1 ;
+      // this.setState({
+      //     // products: products
+      //     // or
+      //     products
+      // });
 
-      this.setState({
-          // products: products
-          // or
-          products
-      });
+      const docRef = this.db.collection('products').doc(products[index].id) ;
+
+      docRef
+        .update({
+          qty: products[index].qty + 1
+        })
+        .then( () => {
+          console.log('updated successfully') ;
+        })
+        .catch( (err) => {
+          console.log('Error : ' , err) ;
+        }) ;
+
   }
 
   handleDecreaseQuantity = (product) => {
       const {products} = this.state ;
       const index = products.indexOf(product) ;
 
+      // if(products[index].qty == 0){
+      //     return ;
+      // }
+
+      // products[index].qty -= 1 ;
+
+      // this.setState({
+      //     // products: products
+      //     // or
+      //     products
+      // });
+
+      const docRef = this.db.collection('products').doc(products[index].id) ;
+
       if(products[index].qty == 0){
-          return ;
+        return ;
       }
+      
+      docRef
+        .update({
+          qty: products[index].qty - 1
+        })
+        .then( () => {
+          console.log('updated successfully') ;
+        })
+        .catch( (err) => {
+          console.log('Error : ' , err) ;
+        }) ;
 
-      products[index].qty -= 1 ;
-
-      this.setState({
-          // products: products
-          // or
-          products
-      });
   }
 
   handleDeleteProduct = (id) => {
@@ -125,10 +158,32 @@ class App extends React.Component {
     let cartTotal = 0 ;
 
     products.map((product) => {
-      cartTotal = cartTotal + product.qty * product.price ;
+      if(product.qty > 0){
+        cartTotal = cartTotal + product.qty * product.price ;
+      }
+      return '' ;
     })
 
     return cartTotal ;
+  }
+
+  addProduct = () => {
+
+    this.db
+      .collection('products')
+      .add({
+        img: 'https://images-na.ssl-images-amazon.com/images/I/61WixzlVuXL._UL1280_.jpg' ,
+        title: "washing machine" ,
+        qty: 3,
+        price: 799 
+      })
+      .then( (docRef) => {
+        console.log('docRef', docRef ) ;
+      })
+      .catch( (err) => {
+        console.log('err: ' , err) ;
+      });
+
   }
 
   render(){
@@ -137,6 +192,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <Navbar count = {this.getCartCount()} />
+        {/* <button onClick={this.addProduct}> ADD PRODUCT</button> */}
         <Cart
           products = {products}
           onIncreaseQuantity = {this.handleIncreaseQuantity}
